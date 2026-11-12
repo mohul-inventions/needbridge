@@ -3,25 +3,27 @@
   "services": {
     "backend": {
       "root": "backend",
+      "runtime": "python",
+      "installCommand": "pip install -r requirements.txt",
+      "buildCommand": "",
+      "outputDirectory": ".",
       "framework": "fastapi"
     },
     "frontend": {
       "root": "frontend",
-      "framework": "vite"
+      "framework": "vite",
+      "installCommand": "npm ci",
+      "buildCommand": "npm run build"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": {
-        "service": "backend"
-      }
+      "destination": { "service": "backend" }
     },
     {
       "source": "/(.*)",
-      "destination": {
-        "service": "frontend"
-      }
+      "destination": { "service": "frontend" }
     }
   ]
 }
