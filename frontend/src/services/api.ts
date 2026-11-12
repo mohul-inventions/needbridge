@@ -11,7 +11,7 @@ import {
 const API_BASE = (import.meta as any).env?.VITE_API_URL || '/api';
 
 // Local storage keys for interactive demo fallback
-const STORE_KEY = 'needbridge_client_store_v1';
+const STORE_KEY = 'needbridge_client_store_v2';
 
 function getLocalStore() {
   try {
@@ -85,17 +85,22 @@ export class ApiService {
     if (endpoint.startsWith('/demands')) {
       if (endpoint.includes('/preview-analysis')) {
         return {
-          match_score: 94.5,
-          confidence: 0.96,
-          product_category: body?.category || 'Laptops & Computing',
-          extracted_specs: body?.specs || { ram: '16GB', storage: '512GB SSD', processor: 'Intel i7' },
-          compatible_cluster: {
-            cluster_name: 'Collective Lot: STEM Developer Laptops (100 Units)',
-            liquidity_score: 87.5
+          demand_intelligence: {
+            output: {
+              extracted_specs: body?.specs || { ram: '16GB DDR5', storage: '512GB SSD', processor: 'Intel Core i7' }
+            }
           },
-          explanation: 'AI Semantic Analysis: Detected 94.5% affinity with active consortium lot. Aggregating brings 20.0% volume tier discount.',
-          potential_savings_pct: 20.0,
-          estimated_unit_price: 712.0
+          community_discovery: {
+            output: {
+              buyer_count: 3,
+              liquidity_data: {
+                score: 87.5,
+                interpretation: 'Highly Viable — 3 compatible communities detected for immediate bulk tiering.'
+              }
+            },
+            decision_explanation: 'AI Semantic Analysis: Detected 94.5% affinity with active consortium lot. Aggregating brings 20.0% volume tier discount ($712/unit vs $890 retail).'
+          },
+          alternatives: []
         } as unknown as T;
       }
 
@@ -274,23 +279,88 @@ export class ApiService {
 
     // --- Transparent Ledger ---
     if (endpoint.startsWith('/ledger')) {
+      if (endpoint.startsWith('/ledger/campaign/')) {
+        const campaignId = endpoint.split('/ledger/campaign/')[1]?.split('?')[0];
+        const cmp = store.campaigns.find((c: any) => c.id === campaignId) || store.campaigns[0];
+        const qty = cmp?.current_quantity || 0;
+        const indivPrice = cmp?.individual_market_unit_price || 890;
+        const bulkPrice = cmp?.final_unit_price || cmp?.estimated_unit_price || 712;
+        const totalIndiv = Math.round(qty * indivPrice * 100) / 100;
+        const subtotal = Math.round(qty * bulkPrice * 100) / 100;
+        const taxes = Math.round(subtotal * 0.08 * 100) / 100;
+        const delivery = qty > 0 ? 250.0 : 0.0;
+        const actualCost = Math.round((subtotal + taxes + delivery) * 100) / 100;
+        const savings = Math.round((totalIndiv - actualCost) * 100) / 100;
+        const savingsPct = totalIndiv > 0 ? Math.round((savings / totalIndiv) * 1000) / 10 : 0;
+        const isFinalized = cmp?.status === 'Purchased' || cmp?.status === 'Delivered';
+
+        return {
+          campaign_id: cmp?.id,
+          campaign_title: cmp?.title,
+          status: cmp?.status,
+          is_finalized: isFinalized,
+          financial_summary: {
+            total_quantity: qty,
+            individual_market_unit_price: indivPrice,
+            collective_unit_price: bulkPrice,
+            total_individual_cost_baseline: totalIndiv,
+            procurement_subtotal: subtotal,
+            taxes,
+            delivery_expenses: delivery,
+            actual_collective_cost: actualCost,
+            total_savings: savings,
+            savings_percentage: savingsPct,
+            savings_guarantee_notice: isFinalized
+              ? 'Guaranteed & settled'
+              : 'Estimated projection based on current supplier quotes and volume tiers.'
+          },
+          participant_allocations: (cmp?.participants || []).map((p: any) => {
+            const pIndiv = Math.round(p.quantity * indivPrice * 100) / 100;
+            const share = qty > 0 ? p.quantity / qty : 0;
+            const pAlloc = Math.round(actualCost * share * 100) / 100;
+            const pSave = Math.round((pIndiv - pAlloc) * 100) / 100;
+            return {
+              participant_id: p.id,
+              user_name: p.user_name || 'Community Buyer',
+              quantity: p.quantity,
+              individual_baseline: pIndiv,
+              allocated_collective_cost: pAlloc,
+              net_savings: pSave,
+              savings_pct: pIndiv > 0 ? Math.round((pSave / pIndiv) * 1000) / 10 : 0,
+              authorized_amount: p.authorized_amount || p.expected_contribution || 0,
+              paid_amount: p.paid_amount || 0,
+              refund_status: p.refund_status || 'NONE'
+            };
+          }),
+          ledger_entries: store.ledger.filter((l: any) => !campaignId || l.campaign_id === campaignId)
+        } as unknown as T;
+      }
       return store.ledger as unknown as T;
     }
 
     // --- Analytics ---
     if (endpoint.startsWith('/analytics/overview')) {
+      const catMap: Record<string, { category: string; count: number; units: number }> = {};
+      for (const d of store.demands) {
+        const c = d.category || 'General';
+        if (!catMap[c]) catMap[c] = { category: c, count: 0, units: 0 };
+        catMap[c].count += 1;
+        catMap[c].units += Number(d.quantity || 0);
+      }
       return {
-        total_active_requirements: store.demands.length,
-        compatible_demand_clusters: store.clusters.length,
-        active_procurement_campaigns: store.campaigns.length,
-        estimated_collective_savings: 48500.0,
-        currency: 'USD',
-        category_breakdown: [
-          { category: 'Laptops', count: 100, volume: 76000 },
-          { category: 'Lab Optics', count: 110, volume: 13612 },
-          { category: 'Office', count: 45, volume: 8208 },
-          { category: 'STEM Kits', count: 68, volume: 11200 },
-          { category: 'Displays', count: 25, volume: 9500 }
+        metrics: {
+          total_active_requirements: store.demands.length,
+          compatible_demand_clusters: store.clusters.length,
+          active_procurement_campaigns: store.campaigns.length,
+          estimated_collective_savings: 48500.0,
+          currency: 'USD'
+        },
+        category_distribution: Object.values(catMap),
+        liquidity_distribution: [
+          { tier: '0-30 (Low)', count: 0 },
+          { tier: '31-60 (Developing)', count: 1 },
+          { tier: '61-80 (Strong)', count: 2 },
+          { tier: '81-100 (Highly Viable)', count: 2 }
         ]
       } as unknown as T;
     }
@@ -307,18 +377,24 @@ export class ApiService {
     if (endpoint.startsWith('/agents/risk-assessments')) {
       return [
         {
-          target_entity: 'Apex Enterprise Computing Ltd.',
-          entity_type: 'supplier',
+          id: 'risk-1',
+          target_type: 'supplier',
+          target_id: 'Apex Enterprise Computing Ltd.',
           risk_score: 0.04,
-          verdict: 'VERIFIED_SAFE',
-          checks_passed: ['Tax ID Validated', 'Escrow Account Linked', '100% On-time Fulfillment Track Record']
+          risk_level: 'LOW',
+          flags: ['Tax ID Validated', 'Escrow Account Linked', '100% On-time Fulfillment Track Record'],
+          explanation: 'Supplier verified with zero delivery anomalies across 128 bulk orders.',
+          assessed_at: new Date().toISOString()
         },
         {
-          target_entity: 'Campaign #CMP-101 Escrow Vault',
-          entity_type: 'escrow',
+          id: 'risk-2',
+          target_type: 'campaign',
+          target_id: 'cmp-101',
           risk_score: 0.02,
-          verdict: 'ESCROW_INTEGRITY_CONFIRMED',
-          checks_passed: ['Multi-party approval threshold achieved', 'Hash chain intact', 'PayPal webhook verified']
+          risk_level: 'LOW',
+          flags: ['Multi-party approval threshold achieved', 'Hash chain intact', 'PayPal webhook verified'],
+          explanation: 'Escrow liquidity fully collateralized with balanced buyer concentration.',
+          assessed_at: new Date().toISOString()
         }
       ] as unknown as T;
     }
@@ -327,10 +403,12 @@ export class ApiService {
       const demoLog = {
         id: `log-${Date.now()}`,
         agent_name: 'Demand Intelligence Agent',
-        action: 'Live Real-Time Semantic Demand Aggregation',
-        details: 'Evaluated cross-community requisitions. Clustered 3 compatible demands into collective procurement batch.',
+        input_summary: 'Live interactive multi-agent demonstration across active consortium pool',
+        output_data: { matched_clusters: 2, liquidity_score: 88.4, potential_savings_pct: 20.0 },
+        execution_time_ms: 136,
         status: 'success',
-        timestamp: new Date().toISOString()
+        decision_explanation: 'Evaluated cross-community requisitions in real time. Clustered compatible demands into collective procurement batch.',
+        created_at: new Date().toISOString()
       };
       store.agentLogs.unshift(demoLog);
       saveLocalStore(store);

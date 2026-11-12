@@ -63,9 +63,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setTab, setSelecte
         ApiService.getAllLedger().catch(() => []),
       ]);
 
-      if (ov) {
+      if (ov && ov.metrics) {
         setMetrics(ov.metrics);
         setCategoryData(ov.category_distribution || []);
+      } else if (ov && typeof ov.total_active_requirements === 'number') {
+        setMetrics(ov);
+        setCategoryData(ov.category_distribution || ov.category_breakdown || []);
       }
       setCampaigns(camps || []);
       setAgentLogs(logs || []);
@@ -369,11 +372,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setTab, setSelecte
                     </span>
                     <span className="text-[10px] text-slate-500 font-mono flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {log.execution_time_ms}ms
+                      {log.execution_time_ms || 120}ms
                     </span>
                   </div>
                   <p className="text-xs text-slate-300 leading-snug">
-                    {log.decision_explanation}
+                    {log.decision_explanation || log.details}
                   </p>
                 </div>
               ))}

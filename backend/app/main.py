@@ -30,15 +30,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database schema and auto-seed demo data on startup
-@app.on_event("startup")
-def startup_event():
+_initialized = False
+
+def ensure_initialized():
+    global _initialized
+    if _initialized:
+        return
     try:
         init_db()
         seed_database()
+        _initialized = True
         print("NEEDBRIDGE backend started successfully with active AI Multi-Agent pipeline.")
     except Exception as e:
         print(f"Startup notice: {e}")
+
+# Initialize database schema and auto-seed demo data on startup & serverless cold start
+@app.on_event("startup")
+def startup_event():
+    ensure_initialized()
+
+@app.middleware("http")
+async def db_init_middleware(request, call_next):
+    ensure_initialized()
+    return await call_next(request)
 
 # Register API routers under /api
 app.include_router(auth_router, prefix="/api")

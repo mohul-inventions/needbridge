@@ -5,7 +5,11 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "needbridge.db")
+_DEFAULT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if os.environ.get("VERCEL") or not os.access(_DEFAULT_DIR, os.W_OK):
+    DB_PATH = "/tmp/needbridge.db"
+else:
+    DB_PATH = os.path.join(_DEFAULT_DIR, "needbridge.db")
 
 def get_connection():
     conn = sqlite3.connect(DB_PATH)

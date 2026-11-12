@@ -199,7 +199,45 @@ export const INITIAL_CLUSTERS = [
       price_competitiveness: 12.0,
       historical_success: 4.0
     },
-    created_at: new Date(Date.now() - 86400000 * 3).toISOString()
+    created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+    matches: [
+      {
+        id: "m-101",
+        cluster_id: "cl-1",
+        demand_id: "dem-101",
+        match_score: 96.2,
+        compatibility_explanation: "Pacific Coast University (40 units) matches Intel Core i7 / 16GB RAM / 512GB SSD developer baseline and North America Dec 20 delivery window.",
+        shared_specs: ["16GB RAM", "512GB NVMe SSD", "Intel Core i5/i7", "14-inch FHD Display"],
+        differences: ["DDR5 preferred vs DDR4 acceptable across counterparts"],
+        potential_savings_pct: 20.0,
+        approved_by_user: true,
+        created_at: new Date(Date.now() - 86400000 * 3).toISOString()
+      },
+      {
+        id: "m-102",
+        cluster_id: "cl-1",
+        demand_id: "dem-102",
+        match_score: 93.8,
+        compatibility_explanation: "Apex Vocational Training Institute (35 units) aligns with CS developer laptop profile and qualifies cluster for Tier-3 bulk manufacturer discount.",
+        shared_specs: ["16GB RAM", "512GB SSD", "Docker/Node.js Ready", "North America Delivery"],
+        differences: ["2-year vs 3-year warranty preference"],
+        potential_savings_pct: 20.0,
+        approved_by_user: true,
+        created_at: new Date(Date.now() - 86400000 * 2).toISOString()
+      },
+      {
+        id: "m-103",
+        cluster_id: "cl-1",
+        demand_id: "dem-103",
+        match_score: 91.5,
+        compatibility_explanation: "Community Coding Guild (25 units) completes the 100-unit MOQ threshold, unlocking institutional pricing for a grassroots non-profit.",
+        shared_specs: ["16GB RAM", "512GB SSD", "Mid-December Fulfillment"],
+        differences: ["Budget cap $880 vs $920 covered by 20% bulk tier at $712/unit"],
+        potential_savings_pct: 19.1,
+        approved_by_user: true,
+        created_at: new Date(Date.now() - 86400000 * 2).toISOString()
+      }
+    ]
   },
   {
     id: "cl-2",
@@ -221,7 +259,33 @@ export const INITIAL_CLUSTERS = [
       price_competitiveness: 11.0,
       historical_success: 4.0
     },
-    created_at: new Date(Date.now() - 86400000 * 4).toISOString()
+    created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+    matches: [
+      {
+        id: "m-201",
+        cluster_id: "cl-2",
+        demand_id: "dem-104",
+        match_score: 92.4,
+        compatibility_explanation: "Oakridge STEM Academy (50 sets) requires Borosilicate 3.3 glassware and digital pH sensors compatible with EduStem bulk SKU.",
+        shared_specs: ["Borosilicate 3.3 Glassware", "OSHA & CE Compliant", "45-Piece Standard"],
+        differences: ["Includes digital pH probe bundle"],
+        potential_savings_pct: 25.0,
+        approved_by_user: true,
+        created_at: new Date(Date.now() - 86400000 * 4).toISOString()
+      },
+      {
+        id: "m-202",
+        cluster_id: "cl-2",
+        demand_id: "dem-105",
+        match_score: 89.7,
+        compatibility_explanation: "BioTech Discovery Labs (60 sets) shares exact glassware specification, doubling order volume to 110 sets.",
+        shared_specs: ["Borosilicate 3.3 Glassware", "Heavy-Duty Lab Grade"],
+        differences: ["Delivery scheduled 11 days later (compatible split shipment)"],
+        potential_savings_pct: 25.0,
+        approved_by_user: true,
+        created_at: new Date(Date.now() - 86400000 * 4).toISOString()
+      }
+    ]
   },
   {
     id: "cl-3",
@@ -311,13 +375,13 @@ export const INITIAL_CAMPAIGNS = [
     delivery_estimate: "10-14 Business Days",
     created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
     participants: [
-      { id: "p1", user_name: "Prof. Marcus Chen", org_name: "Pacific Coast University", quantity: 40, contribution: 28480.0, status: "PAID", escrow_status: "Escrow Locked" },
-      { id: "p2", user_name: "Sarah Jenkins", org_name: "Apex Vocational Training Institute", quantity: 35, contribution: 24920.0, status: "PAID", escrow_status: "Escrow Locked" },
-      { id: "p3", user_name: "Amara Okafor", org_name: "Community Coding Guild", quantity: 25, contribution: 17800.0, status: "PAID", escrow_status: "Escrow Locked" }
+      { id: "p1", campaign_id: "cmp-101", user_id: "u1", user_name: "Prof. Marcus Chen (Pacific Coast Univ)", quantity: 40, expected_contribution: 28480.0, authorized_amount: 28480.0, paid_amount: 28480.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 4).toISOString() },
+      { id: "p2", campaign_id: "cmp-101", user_id: "u2", user_name: "Sarah Jenkins (Apex Training)", quantity: 35, expected_contribution: 24920.0, authorized_amount: 24920.0, paid_amount: 24920.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 3).toISOString() },
+      { id: "p3", campaign_id: "cmp-101", user_id: "u3", user_name: "Amara Okafor (Community Coding Guild)", quantity: 25, expected_contribution: 17800.0, authorized_amount: 17800.0, paid_amount: 17800.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 2).toISOString() }
     ],
     quotes: [
-      { id: "q1", supplier_name: "Apex Enterprise Computing Ltd.", proposed_price: 712.0, status: "SELECTED", savings_pct: 20.0, warranty: "3 Years On-site" },
-      { id: "q2", supplier_name: "Silicon Direct Wholesale Inc.", proposed_price: 729.0, status: "BACKUP", savings_pct: 18.1, warranty: "2 Years Standard" }
+      { id: "q1", supplier_id: "sup-1", product_id: "prod-1", supplier_name: "Apex Enterprise Computing Ltd.", proposed_unit_price: 712.0, min_qty: 60, bulk_discount_pct: 20.0, delivery_fee: 250.0, tax_pct: 8.0, estimated_delivery_days: 10, status: "selected", notes: "Direct enterprise OEM lot with 3-year on-site warranty.", supplier_rating: 4.9, is_demo: true, created_at: new Date(Date.now() - 86400000 * 3).toISOString() },
+      { id: "q2", supplier_id: "sup-2", product_id: "prod-1", supplier_name: "Silicon Direct Wholesale Inc.", proposed_unit_price: 729.0, min_qty: 50, bulk_discount_pct: 18.1, delivery_fee: 300.0, tax_pct: 8.0, estimated_delivery_days: 12, status: "submitted", notes: "Regional distribution pallet with 2-year depot warranty.", supplier_rating: 4.7, is_demo: true, created_at: new Date(Date.now() - 86400000 * 3).toISOString() }
     ]
   },
   {
@@ -339,8 +403,11 @@ export const INITIAL_CAMPAIGNS = [
     delivery_estimate: "14-21 Business Days",
     created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
     participants: [
-      { id: "p4", user_name: "David Rodriguez", org_name: "Oakridge STEM Academy", quantity: 50, contribution: 6187.5, status: "PAID", escrow_status: "Escrow Locked" },
-      { id: "p5", user_name: "Dr. Elena Rostova", org_name: "BioTech Discovery Labs", quantity: 60, contribution: 7425.0, status: "PAID", escrow_status: "Escrow Locked" }
+      { id: "p4", campaign_id: "cmp-102", user_id: "u4", user_name: "David Rodriguez (Oakridge STEM Academy)", quantity: 50, expected_contribution: 6187.5, authorized_amount: 6187.5, paid_amount: 6187.5, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 3).toISOString() },
+      { id: "p5", campaign_id: "cmp-102", user_id: "u5", user_name: "Dr. Elena Rostova (BioTech Discovery Labs)", quantity: 60, expected_contribution: 7425.0, authorized_amount: 7425.0, paid_amount: 7425.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 3).toISOString() }
+    ],
+    quotes: [
+      { id: "q3", supplier_id: "sup-4", product_id: "prod-2", supplier_name: "EduStem Global Manufacturing", proposed_unit_price: 123.75, min_qty: 80, bulk_discount_pct: 25.0, delivery_fee: 190.0, tax_pct: 8.0, estimated_delivery_days: 14, status: "selected", notes: "ISO-certified borosilicate 3.3 bulk batch.", supplier_rating: 4.6, is_demo: true, created_at: new Date(Date.now() - 86400000 * 3).toISOString() }
     ]
   },
   {
@@ -362,8 +429,11 @@ export const INITIAL_CAMPAIGNS = [
     delivery_estimate: "7-12 Business Days",
     created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
     participants: [
-      { id: "p6", user_name: "Lucas Silva", org_name: "Design Studio Hub", quantity: 20, contribution: 3648.0, status: "AUTHORIZED", escrow_status: "Authorized (Pre-hold)" },
-      { id: "p7", user_name: "Chloe Bennett", org_name: "Independent", quantity: 15, contribution: 2736.0, status: "AUTHORIZED", escrow_status: "Authorized (Pre-hold)" }
+      { id: "p6", campaign_id: "cmp-103", user_id: "u6", user_name: "Lucas Silva (Design Studio Hub)", quantity: 20, expected_contribution: 3648.0, authorized_amount: 3648.0, paid_amount: 0.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 2).toISOString() },
+      { id: "p7", campaign_id: "cmp-103", user_id: "u7", user_name: "Chloe Bennett (Independent)", quantity: 15, expected_contribution: 2736.0, authorized_amount: 2736.0, paid_amount: 0.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 1).toISOString() }
+    ],
+    quotes: [
+      { id: "q4", supplier_id: "sup-5", product_id: "prod-3", supplier_name: "Ergon Commercial Furnishings", proposed_unit_price: 182.4, min_qty: 30, bulk_discount_pct: 24.0, delivery_fee: 150.0, tax_pct: 8.0, estimated_delivery_days: 10, status: "selected", notes: "Assembled commercial pallet delivery.", supplier_rating: 4.7, is_demo: true, created_at: new Date(Date.now() - 86400000 * 2).toISOString() }
     ]
   },
   {
@@ -385,8 +455,9 @@ export const INITIAL_CAMPAIGNS = [
     delivery_estimate: "12-16 Business Days",
     created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
     participants: [
-      { id: "p8", user_name: "Zoe Alvarez", org_name: "Biology Lab Initiative", quantity: 18, contribution: 4773.6, status: "PENDING", escrow_status: "In Review" }
-    ]
+      { id: "p8", campaign_id: "cmp-104", user_id: "u8", user_name: "Zoe Alvarez (Biology Lab Initiative)", quantity: 18, expected_contribution: 4773.6, authorized_amount: 0.0, paid_amount: 0.0, refund_status: "NONE", approved: true, joined_at: new Date(Date.now() - 86400000 * 1).toISOString() }
+    ],
+    quotes: []
   }
 ];
 
@@ -397,6 +468,8 @@ export const INITIAL_SUPPLIERS = [
     category: "Laptops & Computing",
     rating: 4.9,
     is_verified: true,
+    is_demo: true,
+    product_count: 4,
     address: "Austin, TX, USA",
     contact_email: "supplier.apex@apexcomputing.com",
     active_bids: 4,
@@ -408,6 +481,8 @@ export const INITIAL_SUPPLIERS = [
     category: "Laptops & Computing",
     rating: 4.7,
     is_verified: true,
+    is_demo: true,
+    product_count: 3,
     address: "San Jose, CA, USA",
     contact_email: "supplier.silicon@siliconlogistics.com",
     active_bids: 2,
@@ -419,6 +494,8 @@ export const INITIAL_SUPPLIERS = [
     category: "Lab & Scientific Equipment",
     rating: 4.8,
     is_verified: true,
+    is_demo: true,
+    product_count: 5,
     address: "Cambridge, MA, USA",
     contact_email: "supplier.scilab@scilaboratories.com",
     active_bids: 3,
@@ -430,6 +507,8 @@ export const INITIAL_SUPPLIERS = [
     category: "Lab & Scientific Equipment",
     rating: 4.6,
     is_verified: true,
+    is_demo: true,
+    product_count: 6,
     address: "Chicago, IL, USA",
     contact_email: "supplier.stemkits@stemdirect.org",
     active_bids: 5,
@@ -441,6 +520,8 @@ export const INITIAL_SUPPLIERS = [
     category: "Office & Furniture",
     rating: 4.7,
     is_verified: true,
+    is_demo: true,
+    product_count: 3,
     address: "Grand Rapids, MI, USA",
     contact_email: "supplier.ergon@ergonoffice.com",
     active_bids: 2,
@@ -497,68 +578,102 @@ export const INITIAL_AGENT_LOGS = [
   {
     id: "log-1",
     agent_name: "Demand Intelligence Agent",
-    action: "Semantic Specification Parsing",
-    details: "Extracted hardware attributes for 40 units: 16GB DDR5, 512GB NVMe, Intel i7. Confidence score: 0.985.",
+    input_summary: "40 Programming Laptops for CS Sophomore Cohort (Pacific Coast Univ)",
+    output_data: { category: "Laptops & Computing", specs: { ram: "16GB DDR5", storage: "512GB SSD", cpu: "Intel i7" }, confidence: 0.985 },
+    execution_time_ms: 118,
     status: "success",
-    timestamp: new Date(Date.now() - 3600000 * 2).toISOString()
+    decision_explanation: "Extracted hardware attributes for 40 units: 16GB DDR5, 512GB NVMe, Intel i7. Confidence score: 0.985.",
+    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
   },
   {
     id: "log-2",
     agent_name: "Community Discovery Agent",
-    action: "Cross-Community Affinity Clustering",
-    details: "Detected mutual purchasing affinity between Pacific Coast Univ (40), Apex Training (35), and Community Guild (25). Combined: 100 units.",
+    input_summary: "Cross-community pool scan across 30 active requisitions",
+    output_data: { cluster_id: "cl-1", combined_qty: 100, communities: 3, liquidity_score: 87.5 },
+    execution_time_ms: 164,
     status: "success",
-    timestamp: new Date(Date.now() - 3600000 * 1.8).toISOString()
+    decision_explanation: "Detected mutual purchasing affinity between Pacific Coast Univ (40), Apex Training (35), and Community Guild (25). Combined: 100 units.",
+    created_at: new Date(Date.now() - 3600000 * 1.8).toISOString()
   },
   {
     id: "log-3",
     agent_name: "Procurement Optimization Agent",
-    action: "Bulk Tier Quotation Optimization",
-    details: "Evaluated 3 competitive bids. Triggered Tier-3 bulk discount (20% off) at Apex Enterprise Computing ($712 vs $890 retail).",
+    input_summary: "Evaluate 3 vendor bids for 100-unit STEM laptop consortium",
+    output_data: { winning_supplier: "Apex Enterprise Computing Ltd.", unit_price: 712.0, savings_pct: 20.0 },
+    execution_time_ms: 92,
     status: "success",
-    timestamp: new Date(Date.now() - 3600000 * 1.2).toISOString()
+    decision_explanation: "Evaluated 3 competitive bids. Triggered Tier-3 bulk discount (20% off) at Apex Enterprise Computing ($712 vs $890 retail).",
+    created_at: new Date(Date.now() - 3600000 * 1.2).toISOString()
   },
   {
     id: "log-4",
-    agent_name: "Negotiation Coordinator Agent",
-    action: "Consensus Voting & Approval Pipeline",
-    details: "Generated explainability report and secured 100% affirmative consensus from all 3 independent institutional buyers.",
+    agent_name: "Procurement Coordinator Agent",
+    input_summary: "Campaign CMP-101 multi-party approval threshold check",
+    output_data: { consensus_pct: 100, participants_approved: 3, campaign_status: "Purchased" },
+    execution_time_ms: 74,
     status: "success",
-    timestamp: new Date(Date.now() - 3600000 * 0.8).toISOString()
+    decision_explanation: "Generated explainability report and secured 100% affirmative consensus from all 3 independent institutional buyers.",
+    created_at: new Date(Date.now() - 3600000 * 0.8).toISOString()
   },
   {
     id: "log-5",
-    agent_name: "Risk & Fraud Detection Agent",
-    action: "Escrow & Supplier Health Audit",
-    details: "Verified Apex Enterprise Computing tax credentials, delivery reliability (99.2%), and sandbox escrow hash. Risk Score: 0.04 (VERY LOW).",
+    agent_name: "Risk & Trust Agent",
+    input_summary: "Audit Apex Enterprise Computing Ltd. & Escrow Ledger Hash",
+    output_data: { risk_score: 0.04, risk_level: "LOW", kyc_verified: true },
+    execution_time_ms: 105,
     status: "success",
-    timestamp: new Date(Date.now() - 3600000 * 0.3).toISOString()
+    decision_explanation: "Verified Apex Enterprise Computing tax credentials, delivery reliability (99.2%), and sandbox escrow hash. Risk Score: 0.04 (VERY LOW).",
+    created_at: new Date(Date.now() - 3600000 * 0.3).toISOString()
   }
 ];
 
 export const INITIAL_PREDICTIVE = [
   {
-    category: "Laptops & Computing",
-    product: "Enterprise Developer Laptops (16GB RAM)",
-    forecasted_demand_next_month: 240,
-    confidence: "94.2%",
-    recommended_target_price: 699.0,
-    suggested_action: "Launch Spring Semester Consortium Campaign"
+    category: "Lab & Scientific Equipment",
+    predicted_item: "Standard Undergraduate STEM Chemistry Kits",
+    expected_quantity_range: "380 - 520 units",
+    historical_demand_frequency: "Bi-Annual Academic Semester Recurring (Every 6 months)",
+    confidence_level: 88.5,
+    confidence_label: "88.5% Confirmed Pattern",
+    recommended_preparation_date: "2026-12-01",
+    explanation: "Consecutive historical procurement spikes observed 3 weeks prior to university term starts across 4 regional polytechnic institutions.",
+    is_heuristic: false,
+    data_points_analyzed: 8
   },
   {
-    category: "Lab & Scientific Equipment",
-    product: "Borosilicate Chemistry Kits & pH Sensors",
-    forecasted_demand_next_month: 180,
-    confidence: "89.5%",
-    recommended_target_price: 118.0,
-    suggested_action: "Pre-aggregate High School & Community College Lots"
+    category: "Laptops & Computing",
+    predicted_item: "Computer Science Dev Laptops (16GB RAM, 512GB SSD)",
+    expected_quantity_range: "280 - 360 units",
+    historical_demand_frequency: "Annual Academic Intake Recurring",
+    confidence_level: 92.0,
+    confidence_label: "92.0% Confirmed Pattern",
+    recommended_preparation_date: "2027-07-01",
+    explanation: "High-fidelity cluster recurrence detected from coding bootcamps and computer science departments renewing hardware warranties.",
+    is_heuristic: false,
+    data_points_analyzed: 6
   },
   {
     category: "Office & Furniture",
-    product: "Ergonomic Task Chairs (Lumbar Support)",
-    forecasted_demand_next_month: 90,
-    confidence: "82.0%",
-    recommended_target_price: 175.0,
-    suggested_action: "Consolidate Co-working Space Inquiries"
+    predicted_item: "Ergonomic Task Seating & Modular Desks",
+    expected_quantity_range: "150 - 220 units",
+    historical_demand_frequency: "Annual Fiscal Budget Exhaustion Cycle",
+    confidence_level: 76.0,
+    confidence_label: "76.0% Confirmed Pattern",
+    recommended_preparation_date: "2027-02-01",
+    explanation: "Community libraries and municipal research centers consistently deploy unspent operational grants into ergonomic upgrades.",
+    is_heuristic: false,
+    data_points_analyzed: 4
+  },
+  {
+    category: "Clean Energy & Hardware",
+    predicted_item: "Photovoltaic Solar Battery Storage Modules",
+    expected_quantity_range: "Unavailable",
+    historical_demand_frequency: "Annual Pre-Summer Grid Resilience Cycle",
+    confidence_level: 0.0,
+    confidence_label: "Confidence Unavailable (Insufficient Data)",
+    recommended_preparation_date: "Pending further data collection",
+    explanation: "Insufficient historical data (only 2 observed cycles; minimum 3 required for statistical validity). Confidence is unavailable.",
+    is_heuristic: true,
+    data_points_analyzed: 2
   }
 ];
