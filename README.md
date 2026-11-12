@@ -194,4 +194,6 @@ OK
 
 ---
 
-© 2026 NEEDBRIDGE Global Inc. All rights reserved.
+## 📄 License
+
+Licensed under the [MIT License](LICENSE) (OSI-approved).
